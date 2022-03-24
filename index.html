@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine Movie</title>
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Movie</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="single.html">Single movie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact-us.html">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- akhir navbar -->
+
+    <div class="form-group mt-2 text-center">
+        <input type="text" name="keyword" id="keyword" class="form-control" style="display: inline; width: 80%;" placeholder="Search Movie . . . . . ">
+        <button class="btn btn-primary" id="search-btn">Search</button>
+    </div>
+
+    <div class="container">
+        <div class="row" id="movies-container">
+
+        </div>
+    </div>
+
+    <!-- js botstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+    <!-- akhir botstrap -->
+    <!-- my script -->
+    <script>
+        let keyword = "batman";
+        let url = "http://www.omdbapi.com/?i=tt3896198&apikey=d86e7705&s=" + keyword;
+        let movies_container = document.getElementById('movies-container');
+        let search_btn = document.getElementById('search-btn');
+        let keyword_input = document.getElementById('keyword');
+
+        let httpRequest;
+
+        // feature ajax;
+        function makeRequest(url) {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('cannot make request')
+                return false;
+            }
+            httpRequest.onreadystatechange = alertContents;
+            httpRequest.open('GET', url);
+            httpRequest.send();
+        }
+
+        function alertContents() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    let response = JSON.parse(httpRequest.responseText);
+                    let movies = response.Search;
+                    console.log(movies);
+                    movies_container.innerHTML = "";
+                    for (let i = 0; i < movies.length; i++) {
+                        movies_container.innerHTML += `<div class="col-lg-4 col-md-4 col-sm-12 text-center mt-2">
+                            <img src="${movies[i].Poster}"/>
+                            <h5 class="my-2 text-uppercase">${movies[i].Title}</h5>
+                            <p class="badge bg-primary text-capitalize">${movies[i].Type}</p>
+                            <p>${movies[i].Year}</p>
+                        </div>`;
+                    }
+                }
+            }
+        }
+
+        makeRequest(url);
+
+        search_btn.addEventListener('click', e => {
+            e.preventDefault();
+            let keyword = keyword_input.value;
+            let url = "http://www.omdbapi.com/?i=tt3896198&apikey=d86e7705&s=" + keyword;
+            makeRequest(url);
+        })
+    </script>
+    <!-- end my script -->
+</body>
+
+</html>

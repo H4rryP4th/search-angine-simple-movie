@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine Movie</title>
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Movie</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="single.html">Single movie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact-us.html">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- akhir navbar -->
+
+    <div class="form-group mt-2 text-center">
+        <input type="text" name="keyword" id="keyword" class="form-control" style="display: inline; width: 80%;" placeholder="Single search . . . . . ">
+        <button class="btn btn-primary" id="search-btn">Search</button>
+    </div>
+
+    <div class="container">
+        <div class="row" id="movies-container">
+
+        </div>
+    </div>
+
+    <!-- js botstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+    <!-- akhir botstrap -->
+    <!-- my script -->
+    <script>
+        let keyword = "";
+        let url = "http://www.omdbapi.com/?i=tt3896198&apikey=d86e7705&t=" + keyword;
+        let movies_container = document.getElementById('movies-container');
+        let search_btn = document.getElementById('search-btn');
+        let keyword_input = document.getElementById('keyword');
+
+        let httpRequest;
+
+        // feature ajax;
+        function makeRequest(url) {
+            httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('cannot make request')
+                return false;
+            }
+            httpRequest.onreadystatechange = alertContents;
+            httpRequest.open('GET', url);
+            httpRequest.send();
+        }
+
+        function alertContents() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                    let response = JSON.parse(httpRequest.responseText);
+                    let movies = response;
+                    if(movies.Response === "False"){
+                        alert('file cannot');
+                    }
+                    movies_container.innerHTML = "";
+                        movies_container.innerHTML += `<div class="col-lg-12 col-md-12 col-sm-12 text-center mt-2">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                    <img src="${movies.Poster}"/>
+                                </div>
+                            <div class="col-sm-12 col-md-6 col-lg-6">
+                            <h5 class="my-2 text-uppercase">${movies.Title}</h5>
+                            <p class="badge bg-primary text-capitalize">${movies.Type}</p>
+                            <p class="fw-bold">${movies.Year}</p>
+                            <p><span class="fw-bold">Released:</span> ${movies.Released}</p>
+                            <p><span class="fw-bold">Runtime:</span> ${movies.Runtime}</p>
+                            <p><span class="fw-bold">Genre:</span> ${movies.Genre}, Box Office: ${movies.BoxOffice}</p>
+                            <p><span class="fw-bold">Director:</span> ${movies.Director}</p>
+                            <p><span class="fw-bold">Country:</span> ${movies.Country}</p>
+                            <p><span class="fw-bold">Language:</span> ${movies.Language}</p>
+                            <p class="text-center fst-italic">${movies.Plot}</p>
+                            <p><span class="fw-bold">Actors:</span> ${movies.Actors}</p>
+                            <p><span class="fw-bold">Awards:</span> ${movies.Awards}</p>
+                            <p></p>
+                                </div>
+                            </div>
+                        </div>`;
+                }
+            }
+        }
+
+        makeRequest(url);
+
+        search_btn.addEventListener('click', e => {
+            e.preventDefault();
+            let keyword = keyword_input.value;
+            let url = "http://www.omdbapi.com/?i=tt3896198&apikey=d86e7705&t=" + keyword;
+            makeRequest(url);
+        })
+    </script>
+    <!-- end my script -->
+</body>
+
+</html>
